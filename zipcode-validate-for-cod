@@ -1,0 +1,89 @@
+simply.changeEvent = function(){
+  $.get(simply.service_zip_json_file, function(jsonArrayData){
+    $.each(jsonArrayData, function(i, zipObj){
+      simply.jsonArrayData[zipObj.Pincode] = zipObj; 
+    });
+  })
+  $(document).on('page:load page:change', function(e) {
+    simply.initContact();
+  });
+};
+simply.initContact = function(){
+  if(Shopify.Checkout.step == 'contact_information'){
+    if($('#zipcode').length == 0){
+      $('<div class="new_pincode-section"><div class="new_pincode_div"><label id="title">Pincode</label><input type="text" class="new_pincode_input" id="zipcode"></div><label id="msg_error"></label></div>').insertBefore('[data-address-field="city"]');
+      $('#zipcode').val($('#checkout_shipping_address_zip').val());
+      $('[data-address-field="zip"]').hide();
+      $( "#zipcode" ).on( "keydown keyup paste", function(){
+        clearTimeout(updateTimer);
+        if ($('#zipcode').val()) {
+          updateTimer = setTimeout(function(){
+            var new_zip = $('#zipcode').val();
+            console.log(new_zip);
+            $('#checkout_shipping_address_zip').val(new_zip);
+            simply.verifyZipCode();
+          }, 500);
+        }
+      });
+      $('.edit_checkout').submit(function(ev){
+        var new_zip = $('#zipcode').val();
+        zipObj = simply.jsonArrayData[new_zip];
+        if(!cn(zipObj)){
+          simply.hasCod = zipObj['Has Cod'] == 'YES'? true : false;
+          if( !simply.hasCod){
+            ev.preventDefault();
+            $('button[type="submit"]').attr('old-bg-color', $('button[type="submit"]').css('background-color'));
+            $('button[type="submit"]').css('background-color', '#2a9dcc');
+            $('button[type="submit"]').attr('disabled','disabled');
+            simply.verifyZipCode();
+          }  
+        }
+        else{
+          ev.preventDefault();
+          $('button[type="submit"]').attr('old-bg-color', $('button[type="submit"]').css('background-color'));
+          $('button[type="submit"]').css('background-color', '#2a9dcc');
+          $('button[type="submit"]').attr('disabled','disabled');
+          simply.verifyZipCode();
+        }
+      });
+    }
+  }
+}
+simply.verifyZipCode = function(){
+  var new_zip = $('#zipcode').val();
+  if(cn(simply.jsonArrayData[new_zip])){
+    $('button[type="submit"]').attr('old-bg-color', $('button[type="submit"]').css('background-color'));
+    $('button[type="submit"]').css('background-color', '#2a9dcc');
+    $('button[type="submit"]').attr('disabled','disabled');
+    $('#checkout_shipping_address_city').val("");
+    $('#checkout_shipping_address_province').val("");
+    $('#msg_error').html('Sorry. We don’t deliver here!');
+  }
+  else{
+    zipObj = simply.jsonArrayData[new_zip];
+    $('#msg_error').html("");
+    $('#checkout_shipping_address_city').val(zipObj.City);
+    $('#checkout_shipping_address_province option').each(function(){
+      var st = $(this).html().toLowerCase();
+      var st1 = zipObj.State.toLowerCase();
+      if(st == st1){
+        $('#checkout_shipping_address_province').val($(this).attr('value'));
+      }
+    });
+    simply.hasCod = zipObj['Has Cod'] == 'YES'? true : false;
+    if( simply.hasCod){
+      $('#msg_error').html('<span class="available">Cash on Delivery</span>');
+    }
+    var oldbg = $('button[type="submit"]').attr('old-bg-color');
+    $('button[type="submit"]').css('background-color', oldbg);
+    $('button[type="submit"]').removeAttr('disabled');
+  }
+}
+var updateTimer = 0;
+simply.init = function(){
+  simply.changeEvent();
+  simply.initContact();
+};
+$(document).ready(function(){
+  simply.init();
+});
