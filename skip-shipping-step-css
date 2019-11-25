@@ -1,0 +1,12 @@
+.loading_payment{  display: none; }
+
+Body.skip_shipping{  visibility: hidden; }
+
+body.skip_shipping .loading_payment
+{
+  display: block;
+  text-align: center;
+  margin-top: 60px;
+  color: #1990c6;
+  visibility: visible;
+}
