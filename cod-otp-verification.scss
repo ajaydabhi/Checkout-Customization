@@ -1,0 +1,104 @@
+#verify_otp{
+    display: none;
+    z-index: 9999;
+    position: fixed;
+    left: 0px;
+    opacity: 0.3;
+    transition:0.2s opacity;
+    transition-duration: 2s;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background: rgba(0, 0, 0, 0.4);
+    .otp_wrap{
+        display: block;
+        z-index: 10000;
+        width: 300px;
+        height: 340px;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        margin-left: -150px;
+        margin-top: -170px;
+        background: #fff;
+        border: 1px solid #a17c5e;
+        .otp_title{
+            position: relative;
+            width: 100%;
+            padding-top:10px;
+            text-align: center;
+            font-size: 13px;
+            line-height: 18px;
+            text-transform: capitalize;
+            color: #fff;
+            background: #a17c5e;
+            letter-spacing: 0.8px;
+            font-weight: 600;
+            .lock_img{
+                display: inline-block;
+                width: 100%;
+                margin-bottom: 15px;
+                /* float: left; */
+                height: 60px;
+                background: url("https://cdn.shopify.com/s/files/1/0034/7901/1441/files/secure-otp.png?2662") center no-repeat;
+                background-size: 60px;
+            }
+            .sub_title{
+                padding:10px 0;
+                background-color: #fff;
+                color: #a17c5e;
+            }
+            .note{
+                color: #fff !important;
+            }
+        }
+        .otp_block{
+            text-align: center;
+            .otp_verify{
+                .otp_code{
+                    border: 1px solid #a17c5e;
+                    padding: 10px;
+                    width: 80%;
+                }
+                .otp_code_btn_div{
+                    margin: 10px;
+                    position: relative;
+                    .btn.verify_otp{
+                        padding: 10px 20px;
+                        width: auto;
+                    }
+                }
+                #countdown{
+                    display: none;
+                    position: absolute;
+                    top: 1px;
+                    right: 65px;
+                    z-index: 1000;
+                    min-width:15px;
+                    background-color: #a17c5e;
+                    padding: 10px 12px;
+                    border-radius: 20px;
+                    color: #fff;
+                }
+            }
+            .close_otp_box{
+                position: absolute;
+                top: -10px;
+                right: -9px;
+                z-index: 1000;
+                background-color: #333;
+                padding: 2px 6px;
+                border-radius: 20px;
+                color: #fff;
+                cursor: pointer;
+                &:hover{
+                    transform:rotate(180deg);
+                    transition:0.2s transform;
+                }
+            }
+            .verify_error{
+                display: none;
+            }
+        }
+    }
+}
