@@ -1,0 +1,31 @@
+ <!-- verify_otp -->
+      <div id="verify_otp">
+        <div class="otp_wrap">
+          <div class="otp_title">
+            <span class="lock_img"></span>
+            <p class="note">OTP sent to your mobile number:<br/>
+            {{checkout.shipping_address.phone}}</p>
+            <p class="sub_title">
+              Enter OTP
+              <a href="{{request.path}}?step=contact_information">(Change Number)</a>
+            </p>
+          </div>
+          <div class="otp_block">
+            <div class="text">
+              <div class="otp_verify" name="checkout_verifty">
+                <input class="otp_code" name="otp" placeholder="Enter OTP" type="text">
+                <div class='otp_code_btn_div'>
+                  <div id="countdown">
+                    <div id="countdown-number"></div>
+                    <span class="pulse"></span>
+                  </div>
+                  <button class="btn verify_otp" id="otpverify" type="submit">Verify OTP</button>
+                  <button class="btn verify_otp" id="resendotp" type="submit">Resend OTP</button>
+                </div>
+                <p class='verify_error'>OTP not verified! Try Again.</p>
+                <span class="close_otp_box">X</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
