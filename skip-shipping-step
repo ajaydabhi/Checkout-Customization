@@ -1,0 +1,26 @@
+function skip_shipping(){
+  if(Shopify.Checkout.step == 'contact_information')
+    {
+      $('.breadcrumb__text').each(function() {
+        if($( this ).text() == 'Shipping'){
+          $(this).parent().hide();
+        }
+      });
+      $('[data-trekkie-id="breadcrumb_shipping_method_link"]').parent().hide();
+        $(".step__footer__continue-btn.btn span.btn__content").html('Continue to payment method');
+    }
+  if( Shopify.Checkout.step == 'shipping_method' )
+    {
+      body = document.getElementsByTagName('body')[0];
+      body.className += " skip_shipping";
+      $('.step__footer__continue-btn.btn').trigger('click');
+    }
+  if(Shopify.Checkout.step == 'payment_method')
+    {
+      $('[data-trekkie-id="breadcrumb_shipping_method_link"]').parent().hide();
+    }
+};
+
+$(document).ready(function(){
+skip_shipping();
+});
