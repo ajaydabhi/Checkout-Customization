@@ -1,0 +1,70 @@
+<script type="text/javascript">
+  if(Shopify.Checkout.step == "contact_information"){
+    $(document).ready(function(){
+
+      $(document).on('page:load page:change', function(e) {
+        simply.PhoneFieldInsert();
+
+        $(document).on('input live change focus focusin focusout blur ready load paste keydown keypress keyup mousemove mousedown mouseover mouseout mouseenter mouseleave click dbclick hover toggle select', '#checkout_shipping_address_phone_clone', function(e) {
+        // prevent copying action
+        if(e.originalEvent && e.originalEvent.clipboardData)
+          var withoutSpaces = e.originalEvent.clipboardData.getData('Text');
+        if(!withoutSpaces)
+          var withoutSpaces = $("#checkout_shipping_address_phone_clone").val();
+        withoutSpaces = $('#checkout_shipping_address_phone_clone').val().substring(0, 10);
+        var withoutSpaces1 = withoutSpaces.replace(/\s+/g, '');
+        var withoutSpaces2 = withoutSpaces1.replace(/[^0-9]/g, '');
+        $('#checkout_shipping_address_phone_clone').val(withoutSpaces2);
+        $('#checkout_shipping_address_phone').val($('#checkout_shipping_address_phone_clone').val());
+      });
+
+        $("#checkout_shipping_address_phone_clone").on("change", function(e) {
+          if($(this).val().length > 9){
+            withoutSpaces = $('#checkout_shipping_address_phone_clone').val().substring(0, 10);
+            var withoutSpaces1 = withoutSpaces.replace(/\s+/g, '');
+            var withoutSpaces2 = withoutSpaces1.replace(/[^0-9]/g, '');
+            $('#checkout_shipping_address_phone_clone').val(withoutSpaces2);
+            $('#checkout_shipping_address_phone').val($('#checkout_shipping_address_phone_clone').val());
+            return false;
+          }
+        });
+
+        $('form.edit_checkout').submit(function(e) {
+          checkout_shipping_address_phone = $('#checkout_shipping_address_phone_clone').val();
+          if(checkout_shipping_address_phone && checkout_shipping_address_phone.length != 10){
+            e.preventDefault();
+            $('#checkout_shipping_address_phone_clone').closest('.field').addClass('field--error');
+            if($('#error-for-phone').length == 0){
+              $('#checkout_shipping_address_phone_clone').closest('.field').append('<p class="field__message field__message--error" id="error-for-phone">Please enter 10 digit phone number.</p>');
+            }
+            else{
+              $('#error-for-phone').show();
+            }
+          }
+        });
+      });
+    });
+    simply.PhoneFieldInsert = function(){
+      var phone_field = $('[data-address-field="phone"]').clone();
+      $('[data-address-field="phone"]').hide();
+      phone = phone_field.find('#checkout_shipping_address_phone');
+      phone.attr('id', 'checkout_shipping_address_phone_clone');
+      phone_field.find('label').attr('for', 'checkout_shipping_address_phone_clone');
+      phone.removeAttr('data-phone-formatter', '');
+      phone.removeAttr('data-phone-formatter-country-select', '');
+      phone.attr('size', '10');
+      phone.attr('type', 'text');
+      phone.attr('max-length', '10');
+//       phone.attr('onkeypress',"return isNumber(event, this)"); 
+phone_field.attr('data-address-field',"");
+phone_field.addClass("clear_both");
+phone_field.insertAfter($(".field[data-address-field=zip]"));
+
+str = $("#checkout_shipping_address_phone").val();
+str = str.replace(/ /g, '');
+$("#checkout_shipping_address_phone_clone").val(str);
+$('#checkout_shipping_address_phone_clone').val($('#checkout_shipping_address_phone_clone').val().substring(0, 10));
+$('#checkout_shipping_address_phone').val($('#checkout_shipping_address_phone_clone').val());
+}
+}
+</script>
